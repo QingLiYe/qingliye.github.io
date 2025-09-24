@@ -66,3 +66,5 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+html, body { scroll-behavior: smooth; }
+#home, #projects, #about, #services, #blog { scroll-margin-top: 80px; }
