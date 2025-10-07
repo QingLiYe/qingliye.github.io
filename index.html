@@ -2,12 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- favicon 可以先用 vite.svg，之后放自己的 /favicon.svg 或 /favicon.ico -->
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+
+    <title>yuriel — Portfolio</title>
+    <meta name="description" content="Yuriel's personal site: portfolio, projects and services, built with React + MUI." />
+    <meta name="theme-color" content="#0b0b12" media="(prefers-color-scheme: dark)" />
+
+    <!-- 分享卡片（可选，准备一张 og 封面放到 public/og-cover.jpg） -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="yuriel — Portfolio" />
+    <meta property="og:description" content="Projects, services and writing." />
+    <meta property="og:url" content="https://qingliye.github.io/" />
+    <meta property="og:image" content="/og-cover.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>You need to enable JavaScript to run this site.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { theme } from './theme';
 
-import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
+// 字体
+import '@fontsource/space-grotesk/700.css';
+
 import './index.css';
-
-const theme = createTheme({
-  
-});
+import App from './App.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

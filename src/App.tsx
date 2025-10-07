@@ -1,38 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Button } from '@mui/material';
+import { CssBaseline } from '@mui/material';
+import NavBar from './components/NavBar';
+import Hero from './components/Hero';
+import Projects from './components/Projects';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-
-        <Button variant="contained">Hello MUI</Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <CssBaseline />
+      <NavBar />
+      {/* 全局不要 overflow: hidden；仅防止 100vw 造成横向滚动 */}
+      <main style={{ overflowX: 'hidden' }}>
+        <Hero />       {/* 自己内部 overflow: hidden，不影响下面 */}
+        <Projects />   {/* full-bleed 背景 + 窄卡片 */}
+      </main>
     </>
-  )
+  );
 }
-
-export default App

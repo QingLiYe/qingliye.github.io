@@ -68,3 +68,61 @@ button:focus-visible {
 }
 html, body { scroll-behavior: smooth; }
 #home, #projects, #about, #services, #blog { scroll-margin-top: 80px; }
+
+.hero-bg{
+  position:absolute; inset:-20% -20% -10% -20%; z-index:-1;
+  background:
+    radial-gradient(650px 300px at 10% 10%, rgba(139,92,246,.25), transparent 60%),
+    radial-gradient(500px 240px at 90% 20%, rgba(236,72,153,.18), transparent 60%),
+    radial-gradient(700px 300px at 50% 90%, rgba(56,189,248,.12), transparent 65%),
+    linear-gradient(180deg, #0b0b12 0%, #0b0b12 100%);
+}
+.glass{
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius:16px; min-width:160px;
+}
+
+body{ background:#0b0b12; }
+.hero-bg{
+  position:absolute; inset:-20% -20% -10% -20%; z-index:-1;
+  background:
+    radial-gradient(650px 300px at 10% 10%, rgba(139,92,246,.25), transparent 60%),
+    radial-gradient(500px 240px at 90% 20%, rgba(236,72,153,.18), transparent 60%),
+    radial-gradient(700px 300px at 50% 90%, rgba(56,189,248,.12), transparent 65%),
+    linear-gradient(180deg, #0b0b12 0%, #0b0b12 100%);
+}
+.glass{
+  background: rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius:16px; min-width:160px;
+}
+
+
+/* index.css —— 放在文件的最上面或全局样式里 */
+html, body, #root {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
+  overflow-x: clip;         /* ✅ 阻止出现水平滚动条（支持的浏览器） */
+  background: #0b0b13;      /* 你的全局深色背景 */
+}
+
+/* Safari 等不支持 overflow: clip 的降级处理 */
+@supports not (overflow: clip) {
+  html, body, #root { overflow-x: hidden; }
+}
+
+/* 可选：统一 box-sizing，避免计算误差带来 1~2px 的溢出 */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+
+
