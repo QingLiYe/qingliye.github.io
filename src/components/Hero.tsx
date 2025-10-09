@@ -65,27 +65,37 @@ export default function Hero() {
 
 
 
-              <Button
-                size="large"
-                variant="contained"
-                sx={{
-                  px: 3.5,
-                  py: 1.25,
-                  fontWeight: 700,
-                  background: 'linear-gradient(135deg,#8b5cf6 0%,#ec4899 100%)',
-                  boxShadow: '0 10px 25px rgba(139,92,246,0.35)',
-                }}
-              >
-                Let&apos;s Discuss
-              </Button>
+              <Stack
+  direction={{ xs: 'column', sm: 'row' }}
+  spacing={{ xs: 1.75, sm: 3 }}     // 约 14px 与 24px 的间距
+  sx={{ mt: 4, alignItems: { xs: 'stretch', sm: 'center' } }}
+>
+  <Button variant="contained" size="large" href="#contact">
+    LET’S DISCUSS
+  </Button>
+
+  <Button
+    component="a"
+    href="/projects/Yuriel_Yu_Deng_CV.pdf"
+    download="Yu-Deng_CV_2025.pdf"
+    variant="outlined"
+    size="large"
+  >
+    DOWNLOAD CV
+  </Button>
+</Stack>
+
             </Box>
 
             {/* 右侧人物 + 玻璃卡片 */}
             <Box flex={1} sx={{ position: 'relative' }}>
               <Box
                 component="img"
-                src={portrait}
-                alt="portrait"
+               src="/projects/my-photo.jpg"          // ← 来自 public
+  alt="Portrait"
+  loading="lazy"
+  decoding="async"
+               
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src =
                     'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=900&q=80';
@@ -128,6 +138,8 @@ export default function Hero() {
                   top: { xs: -18, md: 24 },
                   right: { xs: 8, md: -10 },
                   p: 2.2,
+                    color: '#0f172a',                    // ← 深色字
+    bgcolor: 'rgba(255,255,255,.92)', 
                   boxShadow: '0 20px 50px rgba(0,0,0,.35)',
                 }}
               >

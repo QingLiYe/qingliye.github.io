@@ -1,6 +1,8 @@
 // src/components/Projects.tsx
 // import { Box, Button, Card, Chip, Container, Link, Stack, Typography } from '@mui/material';
 import { Box, Button, Card, Chip, Link, Stack, Typography } from '@mui/material';
+import { keyframes } from '@mui/system';           // ✅ 新增
+import { useEffect, useRef } from 'react'; 
 
 /* ---------- 你原来的 Projects（示例） ---------- */
 type Project = {
@@ -18,16 +20,130 @@ const projects: Project[] = [
     image:
       'https://images.unsplash.com/photo-1583875762488-9069d8d8e8d1?q=80&w=1400&auto=format&fit=crop',
     href: '#',
-  },
-  {
-    title: 'Project Name',
-    desc:
-      'What was your role, deliverables, stack, and impact. Keep it short; 点击 View Project 打开详细页或外链。',
-    image:
-      'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=1400&auto=format&fit=crop',
-    href: '#',
-  },
+  }
 ];
+
+/** ---- 你的项目视频清单（放 public/demos/ 下） ---- */
+type ProjectVideo = { title: string; src: string; poster?: string; href?: string };
+
+const projectVideos: ProjectVideo[] = [
+  {
+    title: 'EquityAI — Congestion',
+    src: '/projects/equityai.mp4',
+    href: '/projects/equityai.mp4' // 点击跳锚点或用 /demos/equityai-15s.mp4
+  },
+   {
+    title: 'Ink pro ',
+    src: '/projects/ink pro.mp4',
+   href: '/projects/ink pro.mp4' // 点击跳锚点或用 /demos/equityai-15s.mp4
+  }
+
+  // …按需继续加
+];
+/** ---- 无限横向滚动动画 ---- */
+const marquee = keyframes`
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }  /* 因为我们会把轨道内容重复两遍 */
+`;
+
+/** ---- 横向视频滚动组件 ---- */
+function ProjectReel() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  // 视口外暂停视频，省电（可选）
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const vids = Array.from(el.querySelectorAll('video'));
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        vids.forEach(v => (entry.isIntersecting ? v.play().catch(() => {}) : v.pause()));
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // 一圈滚动时间（秒）：按视频数量动态算
+  const speedSec = Math.max(30, projectVideos.length * 10);
+  return (
+    <Box
+      ref={wrapRef}
+      sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        py: { xs: 2, md: 3 },
+        WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+        maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          width: 'max-content',
+          animation: `${marquee} ${speedSec}s linear infinite`,
+          '&:hover': { animationPlayState: 'paused' },
+          '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+        }}
+      >
+        {/* 轨道内容重复两遍实现无缝循环 */}
+        {[0, 1].map(dup => (
+          <Box key={dup} sx={{ display: 'flex' }}>
+            {projectVideos.map((p, i) => (
+              <Box
+                key={`${dup}-${i}`}
+                component="a"
+                href={p.href || p.src}
+                aria-label={`Open demo: ${p.title}`}
+            
+                   target="_blank"   
+                sx={{
+                  display: 'block',
+                  width: { xs: 240, sm: 300, md: 360 },
+                  height: { xs: 140, sm: 180, md: 202 },
+                  mr: { xs: 1.5, sm: 2, md: 3 },
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  boxShadow: '0 12px 36px rgba(15,23,42,.18)',
+                  position: 'relative',
+                }}
+              >
+                <video
+                  src={p.src}
+                  poster={p.poster}
+                  muted
+                  loop
+                  autoPlay
+                  playsInline
+                  preload="metadata"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    left: 8,
+                    bottom: 8,
+                    px: 1,
+                    py: 0.5,
+                    borderRadius: 1,
+                    bgcolor: 'rgba(0,0,0,.45)',
+                    color: '#fff',
+                    fontSize: 12,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {p.title}
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
 
 /* ---------- 你的 workHistory 数据 & 类型 ---------- */
 type RoleEntry = {
@@ -54,6 +170,7 @@ export const workHistory: WorkEntry[] = [
     company: 'EquityAI',
     role: 'GIS Developer Intern',
     employmentType: 'Internship',
+    website: 'https://www.equityai.co/',
     start: '2025-07',
     end: '2025-10',
     bullets: [
@@ -118,6 +235,7 @@ export const workHistory: WorkEntry[] = [
   {
     company: 'Chengdu Zhongke-Daqi Software Co., Ltd. (HQ)',
     role: 'Android Development Engineer',
+    website: 'https://www.scbigdata.org/',
     start: '2016-06',
     end: '2017-03',
     bullets: [
@@ -129,15 +247,12 @@ export const workHistory: WorkEntry[] = [
 
 /* ---------- 小工具 ---------- */
 
+
 const formatRange = (s?: string, e?: string) => {
   const ss = (s || '').replace('-', '/');
   const ee = (e || 'Present').replace('-', '/');
   return ss ? `${ss} – ${ee}` : ee; // s 为空时只显示 end/Present
 };
-
-
- 
-
 
 function Bullets({ items }: { items: string[] }) {
   return (
@@ -171,17 +286,18 @@ function TechChips({ list }: { list: string[] }) {
           label={t}
           size="small"
           sx={{
-            bgcolor: '#EEF2FF',              // 淡紫底
-            color:   '#3730A3',              // 深紫字
-            border: '1px solid #C7D2FE',     // 细边
+            bgcolor: '#EEF2FF',
+            color: '#3730A3',
+            border: '1px solid #C7D2FE',
             fontWeight: 600,
-            '& .MuiChip-label': { px: 1.1 }, // 稍微加点左右留白
+            '& .MuiChip-label': { px: 1.1 },
           }}
         />
       ))}
     </Stack>
   );
 }
+
  
 export default function Projects() {
   // full-bleed：让 section 背景真正铺满视口宽度
@@ -193,7 +309,7 @@ export default function Projects() {
     marginLeft: '-50vw',
     marginRight: '-50vw',
   };
-  const SHOW_PROJECTS = false as const;
+  const SHOW_PROJECTS = true as const;
 
   // 内容容器：控制左右留白 + 最大阅读宽
   const inner = {
@@ -225,42 +341,23 @@ export default function Projects() {
     >
       {/* ===== Projects（整块可关） ===== */}
       {SHOW_PROJECTS && (
-        <>
-          <Box sx={inner}>
-            <Typography variant="h3" align="center" sx={{ fontWeight: 800, mb: 6 }}>
-              Projects
-              <Box component="span" sx={{ display: 'block', width: 80, height: 4, bgcolor: 'primary.main', borderRadius: 999, mx: 'auto', mt: 1.5 }} />
-            </Typography>
-          </Box>
+  <>
+    <Box sx={inner}>
+      <Typography variant="h3" align="center" sx={{ fontWeight: 800, mb: 2 }}>
+        Projects
+        <Box component="span" sx={{ display: 'block', width: 110, height: 4, bgcolor: 'primary.main', borderRadius: 999, mx: 'auto', mt: 1.5 }} />
+      </Typography>
+      <Typography align="center" sx={{ opacity: 0.7, mb: 3 }}>
+        Short demos of my recent work (hover to pause · click to view)
+      </Typography>
+    </Box>
 
-          <Box sx={inner}>
-            <Stack spacing={{ xs: 3, md: 4 }}>
-              {projects.map((p, idx) => {
-                const reversed = idx % 2 === 1;
-                return (
-                  <Card key={p.title} elevation={0} sx={cardShellSx}>
-                    {/* 文案 */}
-                    <Box sx={{ order: { xs: 2, md: reversed ? 2 : 1 }, p: { xs: 3, md: 5 }, color: '#0f172a' }}>
-                      <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>{p.title}</Typography>
-                      <Typography sx={{ color: '#475569', mb: 3 }}>{p.desc}</Typography>
-                      <Button size="large" variant="outlined" color="inherit" href={p.href}
-                        sx={{ px: 3, borderRadius: 999, borderColor: '#cbd5e1', ':hover': { borderColor: 'primary.main', color: 'primary.main' } }}>
-                        View Project
-                      </Button>
-                    </Box>
+    <Box sx={inner}>
+      <ProjectReel />  {/* ✅ 关键：渲染视频走马灯 */}
+    </Box>
+  </>
+)}
 
-                    {/* 图片 */}
-                    <Box sx={{ order: { xs: 1, md: reversed ? 1 : 2 }, position: 'relative', minHeight: { xs: 220, md: 320 } }}>
-                      <Box component="img" alt={p.title} src={p.image}
-                        sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </Box>
-                  </Card>
-                );
-              })}
-            </Stack>
-          </Box>
-        </>
-      )}
 
       {/* ===== Experience 标题（内容容器） ===== */}
       <Box sx={inner}>

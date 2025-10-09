@@ -5,9 +5,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 const items = [
   { label: 'Home', href: '#home' },
+    { label: 'Projects', href: '#projects' },
   { label: 'About Me', href: '#about' },
   { label: 'Services', href: '#services' },
-  { label: 'Projects', href: '#projects' },
   { label: 'Blog', href: '#blog' },
 ];
 
