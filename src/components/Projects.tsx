@@ -29,17 +29,37 @@ type ProjectVideo = { title: string; src: string; poster?: string; href?: string
 const projectVideos: ProjectVideo[] = [
   {
     title: 'EquityAI — Congestion',
-    src: '/projects/equityai.mp4',
-    href: '/projects/equityai.mp4' // 点击跳锚点或用 /demos/equityai-15s.mp4
+    src: 'https://youtu.be/SDgtRBXbj8s',
+    href: 'https://youtu.be/SDgtRBXbj8s'
   },
-   {
-    title: 'Ink pro ',
-    src: '/projects/ink pro.mp4',
-   href: '/projects/ink pro.mp4' // 点击跳锚点或用 /demos/equityai-15s.mp4
+  {
+    title: 'Ink Pro — Website Demo',
+    src: 'https://youtu.be/BESRUAoTNqM',
+    href: 'https://youtu.be/BESRUAoTNqM'
   }
-
-  // …按需继续加
 ];
+
+
+// 判断是否是 YouTube 链接
+const isYouTubeUrl = (url: string) => /youtu\.?be|youtube\.com/.test(url);
+
+// 把 youtu.be / watch?v=… 统一转成 embed
+const toYouTubeEmbed = (url: string) => {
+  try {
+    const u = new URL(url);
+    let id = '';
+    if (u.hostname === 'youtu.be') id = u.pathname.slice(1);
+    else if (u.hostname.includes('youtube.com')) {
+      id = u.searchParams.get('v') || u.pathname.split('/').pop() || '';
+    }
+    return id
+      ? `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1&playsinline=1`
+      : url;
+  } catch {
+    return url;
+  }
+};
+
 /** ---- 无限横向滚动动画 ---- */
 const marquee = keyframes`
   0%   { transform: translateX(0); }
@@ -90,53 +110,87 @@ function ProjectReel() {
         {/* 轨道内容重复两遍实现无缝循环 */}
         {[0, 1].map(dup => (
           <Box key={dup} sx={{ display: 'flex' }}>
-            {projectVideos.map((p, i) => (
-              <Box
-                key={`${dup}-${i}`}
-                component="a"
-                href={p.href || p.src}
-                aria-label={`Open demo: ${p.title}`}
-            
-                   target="_blank"   
-                sx={{
-                  display: 'block',
-                  width: { xs: 240, sm: 300, md: 360 },
-                  height: { xs: 140, sm: 180, md: 202 },
-                  mr: { xs: 1.5, sm: 2, md: 3 },
-                  borderRadius: 3,
-                  overflow: 'hidden',
-                  boxShadow: '0 12px 36px rgba(15,23,42,.18)',
-                  position: 'relative',
-                }}
-              >
-                <video
-                  src={p.src}
-                  poster={p.poster}
-                  muted
-                  loop
-                  autoPlay
-                  playsInline
-                  preload="metadata"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    left: 8,
-                    bottom: 8,
-                    px: 1,
-                    py: 0.5,
-                    borderRadius: 1,
-                    bgcolor: 'rgba(0,0,0,.45)',
-                    color: '#fff',
-                    fontSize: 12,
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {p.title}
-                </Box>
-              </Box>
-            ))}
+           {projectVideos.map((p, i) => (
+  <Box
+    key={`${dup}-${i}`}
+    sx={{
+      display: 'block',
+      width: { xs: 240, sm: 300, md: 360 },
+      height: { xs: 140, sm: 180, md: 202 },
+      mr: { xs: 1.5, sm: 2, md: 3 },
+      borderRadius: 3,
+      overflow: 'hidden',
+      boxShadow: '0 12px 36px rgba(15,23,42,.18)',
+      position: 'relative',
+      bgcolor: '#000'
+    }}
+  >
+    {isYouTubeUrl(p.src) ? (
+      <iframe
+        src={toYouTubeEmbed(p.src)}
+        title={p.title}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        style={{ width: '100%', height: '100%', border: 0, display: 'block' }}
+      />
+    ) : (
+      <video
+        src={p.src}
+        poster={p.poster}
+        controls  // ← YouTube 用 iframe，这里只有本地/MP4 才会走 <video>
+        muted
+        loop
+        autoPlay
+        playsInline
+        preload="metadata"
+        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+      />
+    )}
+
+    {/* 左下角标题 */}
+    <Box
+      sx={{
+        position: 'absolute',
+        left: 8,
+        bottom: 8,
+        px: 1,
+        py: 0.5,
+        borderRadius: 1,
+        bgcolor: 'rgba(0,0,0,.45)',
+        color: '#fff',
+        fontSize: 12,
+        lineHeight: 1.2,
+      }}
+    >
+      {p.title}
+    </Box>
+
+    {/* 右上角外链按钮（可选） */}
+    {p.href && (
+      <Link
+        href={p.href}
+        target="_blank"
+        rel="noreferrer"
+        underline="none"
+        sx={{
+          position: 'absolute',
+          right: 8,
+          top: 8,
+          bgcolor: 'rgba(0,0,0,.55)',
+          color: '#fff',
+          px: 1,
+          py: 0.25,
+          borderRadius: 1,
+          fontSize: 12,
+        }}
+      >
+        Open ↗
+      </Link>
+    )}
+  </Box>
+))}
+
           </Box>
         ))}
       </Box>
