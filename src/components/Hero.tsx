@@ -1,8 +1,6 @@
 // src/components/Hero.tsx
 import { Box, Button, Chip, Container, Stack, Typography } from '@mui/material';
 
-const portrait =
-  '/hero.jpg'; // 建议把头像放到 public/hero.jpg；也可以改成你的在线图片地址
 
 export default function Hero() {
   return (

@@ -1,27 +1,9 @@
 // src/components/Projects.tsx
 // import { Box, Button, Card, Chip, Container, Link, Stack, Typography } from '@mui/material';
-import { Box, Button, Card, Chip, Link, Stack, Typography } from '@mui/material';
+import { Box, Card, Chip, Link, Stack, Typography } from '@mui/material';
 import { keyframes } from '@mui/system';           // ✅ 新增
 import { useEffect, useRef } from 'react'; 
 
-/* ---------- 你原来的 Projects（示例） ---------- */
-type Project = {
-  title: string;
-  desc: string;
-  image: string;
-  href?: string;
-};
-
-const projects: Project[] = [
-  {
-    title: 'Project Name',
-    desc:
-      'I created this personal project to showcase how to craft a clean, accessible UI and tell a clear story about the problem and solution.',
-    image:
-      'https://images.unsplash.com/photo-1583875762488-9069d8d8e8d1?q=80&w=1400&auto=format&fit=crop',
-    href: '#',
-  }
-];
 
 /** ---- 你的项目视频清单（放 public/demos/ 下） ---- */
 type ProjectVideo = { title: string; src: string; poster?: string; href?: string };
